@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bunk Calculator - Stay Safe!</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style id="app-style">
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f0f2f5;
+      color: #333;
+    }
+    
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 1rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    .header {
+      background-color: #4f46e5;
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    
+    input[type="number"] {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 0.5rem;
+      transition: all 0.2s;
+    }
+    
+    input[type="number"]:focus {
+      border-color: #4f46e5;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+    }
+    
+    .result-box {
+      background-color: #f8fafc;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .result-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #4f46e5;
+    }
+    
+    .threshold-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 8px;
+      border-radius: 5px;
+      background: #e2e8f0;
+      outline: none;
+    }
+    
+    .threshold-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #4f46e5;
+      cursor: pointer;
+    }
+    
+    .threshold-slider::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #4f46e5;
+      cursor: pointer;
+    }
+    
+    .message-box {
+      background-color: #4f46e5;
+      color: white;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      margin-top: 1.5rem;
+    }
+    
+    .message-text {
+      font-weight: 600;
+      font-size: 1.125rem;
+      margin-left: 1rem;
+    }
+    
+    .safe {
+      background-color: #10b981;
+    }
+    
+    .warning {
+      background-color: #f59e0b;
+    }
+    
+    .danger {
+      background-color: #ef4444;
+    }
+    
+    .meme-image {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 0.5rem;
+    }
+    
+    @media (max-width: 640px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      .input-group {
+        flex-direction: column;
+      }
+      
+      .input-group > div {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 1rem;
+      }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+  <div class="container">
+    <div class="card">
+      <div class="header">
+        <h1 class="text-2xl font-bold mb-2">🎓 Bunk Calculator</h1>
+        <p class="text-sm opacity-90">Calculate how many classes you can skip safely!</p>
+      </div>
+      
+      <div class="p-6">
+        <div class="mb-6">
+          <label for="threshold" class="block text-sm font-medium text-gray-700 mb-1">Attendance Threshold (%)</label>
+          <div class="flex items-center">
+            <input 
+              type="range" 
+              id="threshold" 
+              min="50" 
+              max="100" 
+              value="75" 
+              class="threshold-slider flex-grow mr-4"
+            >
+            <span id="threshold-value" class="font-bold text-indigo-600">75%</span>
+          </div>
+        </div>
+        
+        <div class="flex space-x-4 input-group mb-6">
+          <div class="flex-1">
+            <label for="total-classes" class="block text-sm font-medium text-gray-700 mb-1">Total Classes</label>
+            <input 
+              type="number" 
+              id="total-classes" 
+              min="1" 
+              value="30" 
+              class="input-field"
+              placeholder="Enter total classes"
+            >
+          </div>
+          
+          <div class="flex-1">
+            <label for="attended-classes" class="block text-sm font-medium text-gray-700 mb-1">Attended Classes</label>
+            <input 
+              type="number" 
+              id="attended-classes" 
+              min="0" 
+              value="25" 
+              class="input-field"
+              placeholder="Enter attended classes"
+            >
+          </div>
+        </div>
+        
+        <div class="result-section">
+          <h2 class="text-lg font-semibold mb-3">Results</h2>
+          
+          <div class="result-box">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-gray-600">Current Attendance:</span>
+              <span id="current-attendance" class="result-value">83.33%</span>
+            </div>
+            
+            <div id="bunk-info" class="flex justify-between items-center">
+              <span class="text-gray-600">Classes You Can Bunk:</span>
+              <span id="bunkable-classes" class="result-value text-green-600">2</span>
+            </div>
+            
+            <div id="required-info" class="hidden flex justify-between items-center">
+              <span class="text-gray-600">Classes You Need to Attend:</span>
+              <span id="required-classes" class="result-value text-red-600">0</span>
+            </div>
+          </div>
+          
+          <div id="message-box" class="message-box safe">
+            <img id="meme-image" src="https://cdn.pixabay.com/photo/2015/08/13/13/51/brother-887027_1280.jpg" alt="Meme" class="meme-image">
+            <span id="message-text" class="message-text">Adi poli! 🎉 You're way above the danger zone!</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mt-4 text-center text-gray-500 text-sm">
+      <p>Remember: This is just for fun! Attend your classes responsibly. 😉</p>
+    </div>
+  </div>
+
+  <script id="app-script">
+    // DOM elements
+    const thresholdSlider = document.getElementById('threshold');
+    const thresholdValue = document.getElementById('threshold-value');
+    const totalClassesInput = document.getElementById('total-classes');
+    const attendedClassesInput = document.getElementById('attended-classes');
+    const currentAttendance = document.getElementById('current-attendance');
+    const bunkableClasses = document.getElementById('bunkable-classes');
+    const requiredClasses = document.getElementById('required-classes');
+    const bunkInfo = document.getElementById('bunk-info');
+    const requiredInfo = document.getElementById('required-info');
+    const messageBox = document.getElementById('message-box');
+    const messageText = document.getElementById('message-text');
+    const memeImage = document.getElementById('meme-image');
+    
+    // Safe meme images
+    const safeMemes = [
+      "https://cdn.pixabay.com/photo/2015/08/13/13/51/brother-887027_1280.jpg",
+      "https://cdn.pixabay.com/photo/2016/03/07/09/34/kid-1241817_1280.jpg",
+      "https://cdn.pixabay.com/photo/2017/06/26/12/49/red-panda-2443750_1280.jpg"
+    ];
+    
+    // Warning meme images
+    const warningMemes = [
+      "https://cdn.pixabay.com/photo/2016/11/29/05/55/adult-1867665_1280.jpg",
+      "https://cdn.pixabay.com/photo/2021/01/24/19/05/worried-5946538_1280.jpg",
+      "https://cdn.pixabay.com/photo/2014/11/02/10/41/model-513199_1280.jpg"
+    ];
+    
+    // Danger meme images
+    const dangerMemes = [
+      "https://cdn.pixabay.com/photo/2016/11/23/00/57/adult-1851571_1280.jpg",
+      "https://cdn.pixabay.com/photo/2020/05/09/13/29/man-5149082_1280.jpg",
+      "https://cdn.pixabay.com/photo/2016/11/18/19/15/sad-1836445_1280.jpg"
+    ];
+    
+    // Safe messages
+    const safeMessages = [
+      "Adi poli! 🎉 You're way above the danger zone!",
+      "Killadi! 😎 Your attendance is rock solid!",
+      "Party time! 🥳 You're doing great with attendance!",
+    "Nee oru sambhavam thanne! 🔥 You're a legend!",
+    "Scene contra! 🤙 Attendance is perfect.",
+    "Mass! 😎 Keep this streak going!",
+    "Padikkunna kutti! 🤓 Are you a front bencher?",
+    "All is well! ✨ You're perfectly safe."
+    ];
+    
+    // Warning messages
+    const warningMessages = [
+      "Ketta paiyan da nee! 😬 Careful, you're getting close to danger!",
+      "Enna kodumai sir ithu! 🤔 Better attend some classes!",
+      "Thoda sambhal ke! 😅 Getting a bit risky now!",
+    "Adutha station, danger zone! 🚉 Better catch the next class.",
+    "Wake up, macha! ⏰ The red line is getting closer.",
+    "Veettil ariyumo? 👀 Attendance is dropping.",
+    "Oru maathiri kali kalikalle! 🤨 Attend classes or face the consequences.",
+    "Ithu entha ingane? 🧐 A little more effort, please."
+    ];
+    
+    // Danger messages
+    const dangerMessages = [
+      "Classil alle njanum! 😂 Haven't seen you in ages!",
+      "Ee class-il njan undayirunnu! 🙄 Attendance is in serious trouble!",
+      "Paavam Professor! 😥 Do they even know you exist? ",
+    "Visiting Professor aano? 🤡 We miss your regular attendance.",
+    "Apo, next sem kaanam! 👋",
+    "Kanditt kaalam kure aayi! 👽 Are you even on this planet?",
+    "Game over, bhai! 🎮 Time to plead with the HOD.",
+    "Admission edutha college ithu thanne aano? 🤔"
+    ];
+    
+    // Initialize values from localStorage if available
+    function initializeFromStorage() {
+      const storedThreshold = localStorage.getItem('bunkCalculator_threshold');
+      const storedTotal = localStorage.getItem('bunkCalculator_totalClasses');
+      const storedAttended = localStorage.getItem('bunkCalculator_attendedClasses');
+      
+      if (storedThreshold) thresholdSlider.value = storedThreshold;
+      if (storedTotal) totalClassesInput.value = storedTotal;
+      if (storedAttended) attendedClassesInput.value = storedAttended;
+      
+      thresholdValue.textContent = `${thresholdSlider.value}%`;
+      calculateAttendance();
+    }
+    
+    // Save values to localStorage
+    function saveToStorage() {
+      localStorage.setItem('bunkCalculator_threshold', thresholdSlider.value);
+      localStorage.setItem('bunkCalculator_totalClasses', totalClassesInput.value);
+      localStorage.setItem('bunkCalculator_attendedClasses', attendedClassesInput.value);
+    }
+    
+    // Calculate attendance percentage and update the UI
+    function calculateAttendance() {
+      const threshold = parseInt(thresholdSlider.value) / 100;
+      const totalClasses = parseInt(totalClassesInput.value) || 0;
+      const attendedClasses = parseInt(attendedClassesInput.value) || 0;
+      
+      // Validate inputs
+      if (totalClasses <= 0 || attendedClasses < 0 || attendedClasses > totalClasses) {
+        currentAttendance.textContent = "Invalid Input";
+        bunkableClasses.textContent = "0";
+        requiredClasses.textContent = "0";
+        messageText.textContent = "Please enter valid numbers! 🙄";
+        messageBox.className = "message-box warning";
+        return;
+      }
+      
+      // Calculate current attendance percentage
+      const attendancePercentage = (attendedClasses / totalClasses) * 100;
+      currentAttendance.textContent = `${attendancePercentage.toFixed(2)}%`;
+      
+      // Calculate bunkable or required classes
+      if (attendancePercentage >= threshold * 100) {
+        // Above threshold - calculate how many classes can be bunked
+        const maxBunkable = Math.floor(attendedClasses - (threshold * totalClasses));
+        bunkableClasses.textContent = maxBunkable;
+        bunkInfo.classList.remove('hidden');
+        requiredInfo.classList.add('hidden');
+        
+        // Update message based on risk level
+        if (attendancePercentage - (threshold * 100) > 15) {
+          // Safe zone - way above threshold
+          messageBox.className = "message-box safe";
+          messageText.textContent = getRandomItem(safeMessages);
+          memeImage.src = getRandomItem(safeMemes);
+        } else {
+          // Warning zone - close to threshold
+          messageBox.className = "message-box warning";
+          messageText.textContent = getRandomItem(warningMessages);
+          memeImage.src = getRandomItem(warningMemes);
+        }
+      } else {
+        // Below threshold - calculate required classes
+        const required = Math.ceil((threshold * totalClasses - attendedClasses) / (1 - threshold));
+        requiredClasses.textContent = required;
+        bunkInfo.classList.add('hidden');
+        requiredInfo.classList.remove('hidden');
+        
+        // Danger zone - below threshold
+        messageBox.className = "message-box danger";
+        messageText.textContent = getRandomItem(dangerMessages);
+        memeImage.src = getRandomItem(dangerMemes);
+      }
+      
+      // Save to storage
+      saveToStorage();
+    }
+    
+    // Get random item from array
+    function getRandomItem(array) {
+      return array[Math.floor(Math.random() * array.length)];
+    }
+    
+    // Event listeners
+    thresholdSlider.addEventListener('input', function() {
+      thresholdValue.textContent = `${this.value}%`;
+      calculateAttendance();
+    });
+    
+    totalClassesInput.addEventListener('input', calculateAttendance);
+    attendedClassesInput.addEventListener('input', calculateAttendance);
+    
+    // Initialize on page load
+    initializeFromStorage();
+  </script>
+</body>
+</html>
