@@ -26,5 +26,3 @@ That's it! No installation needed.
 😜 Disclaimer
 This is just for fun, machane! Attend your classes. We are not responsible if your professor doesn't know you exist. 😉
 
-##😜 Disclaimer
-###This is just for fun, machane! Attend your classes. We are not responsible if your professor doesn't know you exist. 😉
